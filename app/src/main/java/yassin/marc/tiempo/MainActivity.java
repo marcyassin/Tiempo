@@ -18,12 +18,19 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 
  public class MainActivity extends Activity {
 
      public static final  String TAG = MainActivity.class.getSimpleName();
+     private CurrentConditions mCurrentConditions;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,15 +59,21 @@ import java.io.IOException;
                 public void onResponse(Response response) throws IOException {
                     try {
 
-                        Log.v(TAG, response.body().string());
+                        String jsonData = response.body().string();
+
+                        Log.v(TAG, jsonData);
 
                         if (response.isSuccessful()) {
+                            mCurrentConditions = getCurrentDetails(jsonData);
                         } else {
                             alertUserAboutErrror();
 
                         }
 
                     } catch (IOException e) {
+                        Log.e(TAG, "Exception caught: ", e);
+                    }
+                    catch (JSONException e){
                         Log.e(TAG, "Exception caught: ", e);
                     }
 
@@ -75,6 +88,29 @@ import java.io.IOException;
         Log.d(TAG, "Main UI code is running!");
 
     }
+
+     private CurrentConditions getCurrentDetails(String jsonData) throws JSONException {
+         JSONObject forecast = new JSONObject(jsonData);
+         String timezone = forecast.getString("timezone");
+         Log.i(TAG,"From JSON: " + timezone);
+
+         JSONObject currently = forecast.getJSONObject("currently");
+
+         CurrentConditions currentConditions = new CurrentConditions();
+         currentConditions.setHumidity(currently.getDouble("humidity"));
+         currentConditions.setTime(currently.getLong("time"));
+         currentConditions.setIcon(currently.getString("icon"));
+         currentConditions.setPrecipChance(currently.getDouble("precipProbability"));
+         currentConditions.setSummary(currently.getString("summary"));
+         currentConditions.setTemperature(currently.getDouble("temperature"));
+         currentConditions.setTimeZone(timezone);
+
+         Log.d(TAG, currentConditions.getFormattedTime());
+
+
+         return currentConditions;
+
+     }
 
      private boolean isNetworkAvailable() {
          ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
