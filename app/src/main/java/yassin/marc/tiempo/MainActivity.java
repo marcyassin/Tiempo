@@ -69,7 +69,7 @@ import java.io.IOException;
         }
 
         else{
-            Toast.makeText(this, "Network is unavailable!", Toast.LENGTH_LONG).show();2
+            Toast.makeText(this, getString(R.string.network_unavailable_message), Toast.LENGTH_LONG).show();
         }
 
         Log.d(TAG, "Main UI code is running!");
