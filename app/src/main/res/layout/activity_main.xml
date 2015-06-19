@@ -3,9 +3,130 @@
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
+    android:background="#ff00c4ff">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/temeratureLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:text="100"
+        android:textSize="150sp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:id="@+id/degreeImageView"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/degree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/temeratureLabel"
+        android:layout_toRightOf="@+id/temeratureLabel"
+        android:layout_toEndOf="@+id/temeratureLabel" />
+
+    <TextView
+        android:text="At 5:00 pm it will be"
+        android:textSize="18sp"
+        android:id="@+id/timeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/temeratureLabel"
+        android:textColor="#A0FFFFFF" />
+
+    <TextView
+        android:id="@+id/locationLabel"
+        android:textColor="@android:color/white"
+        android:text="Alcatraz Island, CA"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/timeLabel"
+        android:layout_marginBottom="60dp"/>
+
+    <ImageView
+        android:id="@+id/iconImageView"
+        android:src="@drawable/partly_cloudy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignBottom="@+id/locationLabel"/>
+
+    <LinearLayout
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/temeratureLabel"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/hpListView">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+
+                android:text="HUMIDITY"
+                android:id="@+id/humidityLabel"
+                android:textColor="#A0FFFFFF"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+
+                android:text="0.88"
+                android:textSize="24sp"
+                android:id="@+id/humidityValue"
+                android:textColor="@android:color/white"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:gravity="center_horizontal"
+                android:layout_height="wrap_content"
+
+                android:text="PRECIPITATION"
+                android:textColor="#A0FFFFFF"
+                android:id="@+id/precipLabel" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:gravity="center_horizontal"
+
+                android:textSize="24sp"
+                android:text="100%"
+                android:id="@+id/precipValue" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/hpListView"
+        android:layout_marginTop="50dp"
+        android:gravity="center_horizontal"
+        android:text="Sunny and clear skies"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"/>
+
 
 </RelativeLayout>
