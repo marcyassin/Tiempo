@@ -1,29 +1,24 @@
 package yassin.marc.tiempo;
 
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
-/**
- * Created by Marc on 6/18/15.
- */
 public class CurrentConditions {
     private String mIcon;
-    private String mLocation;
     private long mTime;
     private double mTemperature;
     private double mHumidity;
     private double mPrecipChance;
     private String summary;
     private String mTimeZone;
-
-    public String getLocation() {
-        return mLocation;
-    }
-
-    public void setLocation(String location) {
-        mLocation = location;
-    }
 
     public String getTimeZone() {
         return mTimeZone;
@@ -127,4 +122,8 @@ public class CurrentConditions {
         return timeString;
 
     }
+
+
+
+
 }

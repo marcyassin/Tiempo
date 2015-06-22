@@ -3,6 +3,8 @@
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -18,18 +20,16 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
-
+import java.util.List;
+import java.util.Locale;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -46,6 +46,10 @@ import butterknife.InjectView;
      @InjectView(R.id.iconImageView) ImageView mIconImageView;
      @InjectView(R.id.refreshButton) ImageView mRefreshButton;
      @InjectView(R.id.progressBar) ProgressBar mProgressBar;
+     @InjectView(R.id.locationLabel) TextView mLocationLabel;
+
+
+     String locationLabel;
 
 
      @Override
@@ -59,17 +63,7 @@ import butterknife.InjectView;
          Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
          final double longitude = location.getLongitude();
          final double latitude = location.getLatitude();
-
-
-
-//         final double latitude = location.latitude;//40.6764000;
-//         final double longitude = location.longitude;//-73.8124980;
-         System.out.println("latitude: "+latitude);
-         System.out.println("longitude: " + longitude);
-
-
-
-
+         getLocationName(latitude,longitude);
 
          mRefreshButton.setOnClickListener(new View.OnClickListener() {
              @Override
@@ -79,25 +73,19 @@ import butterknife.InjectView;
          });
 
          getForecast(latitude, longitude);
-
-
-
         Log.d(TAG, "Main UI code is running!");
 
     }
 
      private void updateDisplay() {
          mTemperatureLabel.setText(mCurrentConditions.getTemperature() + "");
-         mTimeLabel.setText("At " + mCurrentConditions.getFormattedTime() + " it will be");
+         mTimeLabel.setText(mCurrentConditions.getFormattedTime());
          mHumidityValue.setText(mCurrentConditions.getHumidity() + "");
          mPrecipChance.setText(mCurrentConditions.getPrecipChance() + "%");
          mSummaryLabel.setText(mCurrentConditions.getSummary());
          Drawable drawable = getResources().getDrawable(mCurrentConditions.getIconId());
          mIconImageView.setImageDrawable(drawable);
-
-
-
-
+         mLocationLabel.setText(locationLabel);
      }
 
      private CurrentConditions getCurrentDetails(String jsonData) throws JSONException {
@@ -224,6 +212,22 @@ import butterknife.InjectView;
      private void alertUserAboutErrror() {
          AlertDialogFragment dialog = new AlertDialogFragment();
          dialog.show(getFragmentManager(),"error_dialog");
+
+     }
+
+     private void getLocationName(double lat, double longit){
+         Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
+
+         try {
+             List<Address> addresses = geoCoder.getFromLocation(lat, longit, 1);
+
+             if (addresses.size() > 0) {
+                 locationLabel = addresses.get(0).getAddressLine(1);
+             }
+         }
+         catch (IOException e1) {
+             e1.printStackTrace();
+         }
 
      }
 
