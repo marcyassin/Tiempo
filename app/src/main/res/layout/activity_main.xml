@@ -7,14 +7,23 @@
     android:background="#ff00c4ff">
 
     <TextView
-        android:id="@+id/temeratureLabel"
+        android:id="@+id/temperatureLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
-        android:text="100"
+        android:text="--"
         android:textSize="150sp"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:id="@+id/refreshButton"
+        android:src="@drawable/refresh"
+        />
 
     <ImageView
         android:id="@+id/degreeImageView"
@@ -22,24 +31,24 @@
         android:src="@drawable/degree"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/temeratureLabel"
-        android:layout_toRightOf="@+id/temeratureLabel"
-        android:layout_toEndOf="@+id/temeratureLabel" />
+        android:layout_alignTop="@+id/temperatureLabel"
+        android:layout_toRightOf="@+id/temperatureLabel"
+        android:layout_toEndOf="@+id/temperatureLabel" />
 
     <TextView
-        android:text="At 5:00 pm it will be"
+        android:text="..."
         android:textSize="18sp"
         android:id="@+id/timeLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/temeratureLabel"
+        android:layout_above="@+id/temperatureLabel"
         android:textColor="#A0FFFFFF" />
 
     <TextView
         android:id="@+id/locationLabel"
         android:textColor="@android:color/white"
-        android:text="Alcatraz Island, CA"
+        android:text="..."
         android:textSize="20sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -57,7 +66,7 @@
 
     <LinearLayout
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/temeratureLabel"
+        android:layout_below="@+id/temperatureLabel"
         android:layout_width="match_parent"
         android:layout_marginTop="10dp"
         android:layout_height="wrap_content"
@@ -84,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
 
-                android:text="0.88"
+                android:text="--"
                 android:textSize="24sp"
                 android:id="@+id/humidityValue"
                 android:textColor="@android:color/white"/>
@@ -112,21 +121,30 @@
                 android:gravity="center_horizontal"
 
                 android:textSize="24sp"
-                android:text="100%"
+                android:text="--"
                 android:id="@+id/precipValue" />
         </LinearLayout>
     </LinearLayout>
 
     <TextView
+        android:id="@+id/summaryLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/hpListView"
         android:layout_marginTop="50dp"
         android:gravity="center_horizontal"
-        android:text="Sunny and clear skies"
+        android:text="Retreiving current weather conditions..."
         android:textColor="@android:color/white"
         android:textSize="18sp"/>
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_alignBottom="@+id/refreshButton" />
 
 
 </RelativeLayout>

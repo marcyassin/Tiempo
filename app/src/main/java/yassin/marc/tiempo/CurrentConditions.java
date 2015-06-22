@@ -9,12 +9,21 @@ import java.util.TimeZone;
  */
 public class CurrentConditions {
     private String mIcon;
+    private String mLocation;
     private long mTime;
     private double mTemperature;
     private double mHumidity;
     private double mPrecipChance;
     private String summary;
     private String mTimeZone;
+
+    public String getLocation() {
+        return mLocation;
+    }
+
+    public void setLocation(String location) {
+        mLocation = location;
+    }
 
     public String getTimeZone() {
         return mTimeZone;
@@ -76,8 +85,8 @@ public class CurrentConditions {
         mTime = time;
     }
 
-    public double getTemperature() {
-        return mTemperature;
+    public int getTemperature() {
+        return (int) Math.round(mTemperature);
     }
 
     public void setTemperature(double temperature) {
@@ -92,8 +101,9 @@ public class CurrentConditions {
         mHumidity = humidity;
     }
 
-    public double getPrecipChance() {
-        return mPrecipChance;
+    public int getPrecipChance() {
+        double perc = mPrecipChance * 100;
+        return (int) Math.round(perc);
     }
 
     public void setPrecipChance(double precipChance) {
