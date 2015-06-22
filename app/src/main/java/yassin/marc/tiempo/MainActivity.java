@@ -3,6 +3,8 @@
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.nfc.Tag;
@@ -46,17 +48,25 @@ import butterknife.InjectView;
      @InjectView(R.id.progressBar) ProgressBar mProgressBar;
 
 
-
-
-
      @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
          mProgressBar.setVisibility(View.INVISIBLE);
-         final double latitude = 37.8267;
-         final double longitude = -122.423;
+
+         LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+         Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+         final double longitude = location.getLongitude();
+         final double latitude = location.getLatitude();
+
+
+
+//         final double latitude = location.latitude;//40.6764000;
+//         final double longitude = location.longitude;//-73.8124980;
+         System.out.println("latitude: "+latitude);
+         System.out.println("longitude: " + longitude);
+
 
 
 
