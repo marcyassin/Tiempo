@@ -25,6 +25,8 @@ import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
@@ -34,10 +36,24 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 
+ // Add option to view in celsius
+ // Add searchbar for picking to see other cities' weather
+ // add 5 day forecast to bottom of the screen
+ // make UI more original
+
+
  public class MainActivity extends Activity {
 
      public static final  String TAG = MainActivity.class.getSimpleName();
      private CurrentConditions mCurrentConditions;
+     private CurrentConditions dayOne;
+     private CurrentConditions dayTwo;
+     private CurrentConditions dayThree;
+     private CurrentConditions dayFour;
+     private CurrentConditions dayFive;
+     private CurrentConditions daySix;
+
+
      @InjectView(R.id.timeLabel) TextView mTimeLabel;
      @InjectView(R.id.temperatureLabel) TextView mTemperatureLabel;
      @InjectView(R.id.humidityValue) TextView mHumidityValue;
@@ -47,6 +63,13 @@ import butterknife.InjectView;
      @InjectView(R.id.refreshButton) ImageView mRefreshButton;
      @InjectView(R.id.progressBar) ProgressBar mProgressBar;
      @InjectView(R.id.locationLabel) TextView mLocationLabel;
+     @InjectView(R.id.maxTemp) TextView mMaxTempLabel;
+     @InjectView(R.id.minTemp) TextView mMinTempLabel;
+     @InjectView(R.id.firstDayHiTemp) TextView mDayOneHiTemp;
+     @InjectView(R.id.firstDayLowTemp) TextView mDayOneLowTemp;
+     @InjectView(R.id.firstDaySummary) TextView mDayOneSummary;
+
+
 
 
      String locationLabel;
@@ -77,25 +100,19 @@ import butterknife.InjectView;
 
     }
 
-     private void updateDisplay() {
-         mTemperatureLabel.setText(mCurrentConditions.getTemperature() + "");
-         mTimeLabel.setText(mCurrentConditions.getFormattedTime());
-         mHumidityValue.setText(mCurrentConditions.getHumidity() + "");
-         mPrecipChance.setText(mCurrentConditions.getPrecipChance() + "%");
-         mSummaryLabel.setText(mCurrentConditions.getSummary());
-         Drawable drawable = getResources().getDrawable(mCurrentConditions.getIconId());
-         mIconImageView.setImageDrawable(drawable);
-         mLocationLabel.setText(locationLabel);
-     }
+
 
      private CurrentConditions getCurrentDetails(String jsonData) throws JSONException {
          JSONObject forecast = new JSONObject(jsonData);
          String timezone = forecast.getString("timezone");
          Log.i(TAG,"From JSON: " + timezone);
 
+         // Current Day objects //////////////////////////////////////////////////////////////
+
          JSONObject currently = forecast.getJSONObject("currently");
 
          CurrentConditions currentConditions = new CurrentConditions();
+
          currentConditions.setHumidity(currently.getDouble("humidity"));
          currentConditions.setTime(currently.getLong("time"));
          currentConditions.setIcon(currently.getString("icon"));
@@ -104,10 +121,43 @@ import butterknife.InjectView;
          currentConditions.setTemperature(currently.getDouble("temperature"));
          currentConditions.setTimeZone(timezone);
 
+         JSONObject daily = forecast.getJSONObject("daily");
+         JSONArray data = daily.getJSONArray("data");
+         JSONObject p = (JSONObject)data.get(0);
+
+         currentConditions.setTemperatureMax(p.getDouble("temperatureMax"));
+         currentConditions.setTemperatureMin(p.getDouble("temperatureMin"));
+
          Log.d(TAG, currentConditions.getFormattedTime());
 
 
          return currentConditions;
+
+     }
+
+     private CurrentConditions getDayDetails(String jsonData, int day) throws JSONException {
+         //Day objects //////////////////////////////////////////////////////////////
+
+         CurrentConditions dayConditions = new CurrentConditions();
+
+         JSONObject forecast = new JSONObject(jsonData);
+
+         //String timezone = forecast.getString("timezone");
+         //Log.i(TAG,"From JSON: " + timezone);
+
+         JSONObject daily = forecast.getJSONObject("daily");
+         JSONArray data = daily.getJSONArray("data");
+         JSONObject p = (JSONObject)data.get(day);
+
+         dayConditions.setTemperatureMax(p.getDouble("temperatureMax"));
+         dayConditions.setTemperatureMin(p.getDouble("temperatureMin"));
+         dayConditions.setIcon(p.getString("icon"));
+         dayConditions.setSummary(p.getString("summary"));
+
+         //Log.d(TAG, dayConditions.getFormattedTime());
+
+
+         return dayConditions;
 
      }
 
@@ -156,6 +206,13 @@ import butterknife.InjectView;
 
                          if (response.isSuccessful()) {
                              mCurrentConditions = getCurrentDetails(jsonData);
+                             dayOne = getDayDetails(jsonData, 1);
+                             dayTwo = getDayDetails(jsonData, 2);
+                             dayThree = getDayDetails(jsonData, 3);
+                             dayFour = getDayDetails(jsonData, 4);
+                             dayFive = getDayDetails(jsonData, 5);
+                             daySix = getDayDetails(jsonData,6);
+
                              runOnUiThread(new Runnable() {
                                  @Override
                                  public void run() {
@@ -184,6 +241,26 @@ import butterknife.InjectView;
          }
      }
 
+     private void updateDisplay() {
+         //Current Day conditions..
+         Drawable drawable = getResources().getDrawable(mCurrentConditions.getIconId());
+         mTemperatureLabel.setText(mCurrentConditions.getTemperature() + "");
+         mTimeLabel.setText("Last updated at " + mCurrentConditions.getFormattedTime() + "");
+         mHumidityValue.setText(mCurrentConditions.getHumidity() + "");
+         mPrecipChance.setText(mCurrentConditions.getPrecipChance() + "%");
+         mSummaryLabel.setText(mCurrentConditions.getSummary());
+         mIconImageView.setImageDrawable(drawable);
+         mLocationLabel.setText(locationLabel);
+         mMaxTempLabel.setText(mCurrentConditions.getTemperatureMax() + "");
+         mMinTempLabel.setText(mCurrentConditions.getTemperatureMin() + "");
+
+         //WeekDay Forecast objects..
+         mDayOneHiTemp.setText(dayOne.getTemperatureMax() + "");
+         mDayOneLowTemp.setText(dayOne.getTemperatureMin()+"");
+         mDayOneSummary.setText(dayOne.getSummary());
+
+     }
+
      private void toggleRefresh() {
          if (mProgressBar.getVisibility() == View.INVISIBLE){
              mProgressBar.setVisibility(View.VISIBLE);
@@ -193,7 +270,6 @@ import butterknife.InjectView;
          else {
              mProgressBar.setVisibility(View.INVISIBLE);
              mRefreshButton.setVisibility(View.VISIBLE);
-
          }
 
      }

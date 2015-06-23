@@ -12,6 +12,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class CurrentConditions {
+    // current day vars
     private String mIcon;
     private long mTime;
     private double mTemperature;
@@ -19,6 +20,24 @@ public class CurrentConditions {
     private double mPrecipChance;
     private String summary;
     private String mTimeZone;
+    private double mTemperatureMax;
+    private double mTemperatureMin;
+
+    public int getTemperatureMax() {
+        return (int) Math.ceil(mTemperatureMax);
+    }
+
+    public void setTemperatureMax(double temperatureMax) {
+        mTemperatureMax = temperatureMax;
+    }
+
+    public int getTemperatureMin() {
+        return (int) Math.floor(mTemperatureMin);
+    }
+
+    public void setTemperatureMin(double temperatureMin) {
+        mTemperatureMin = temperatureMin;
+    }
 
     public String getTimeZone() {
         return mTimeZone;
@@ -122,6 +141,7 @@ public class CurrentConditions {
         return timeString;
 
     }
+
 
 
 
