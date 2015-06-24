@@ -26,6 +26,19 @@
         android:src="@drawable/refresh"
         />
 
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/location_arrays"
+        android:prompt="@string/city_prompt"
+        android:popupBackground="@android:color/white"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/refreshButton"
+        android:layout_marginTop="60dp"
+        />
+
+
     <TextView
         android:id="@+id/locationLabel"
         android:layout_width="wrap_content"
@@ -36,6 +49,7 @@
         android:text="@string/locationTempLabel"
         android:textColor="@android:color/white"
         android:typeface="normal"
+        android:visibility="invisible"
         android:textSize="16sp"/>
 
     <TextView

@@ -30,6 +30,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import butterknife.ButterKnife;
@@ -65,9 +66,42 @@ import butterknife.InjectView;
      @InjectView(R.id.locationLabel) TextView mLocationLabel;
      @InjectView(R.id.maxTemp) TextView mMaxTempLabel;
      @InjectView(R.id.minTemp) TextView mMinTempLabel;
+
+     @InjectView(R.id.firstDayTextView) TextView mFirstDayLabel;
      @InjectView(R.id.firstDayHiTemp) TextView mDayOneHiTemp;
      @InjectView(R.id.firstDayLowTemp) TextView mDayOneLowTemp;
      @InjectView(R.id.firstDaySummary) TextView mDayOneSummary;
+     @InjectView(R.id.firstDayImageView) ImageView mDayOneIcon;
+
+     @InjectView(R.id.secondDayTextView) TextView mSecondDayLabel;
+     @InjectView(R.id.secondDayHiTemp) TextView mDayTwoHiTemp;
+     @InjectView(R.id.secondDayLowTemp) TextView mDayTwoLowTemp;
+     @InjectView(R.id.secondDaySummary) TextView mDayTwoSummary;
+     @InjectView(R.id.secondDayImageView) ImageView mDayTwoIcon;
+
+     @InjectView(R.id.thirdDayTextView) TextView mThirdDayLabel;
+     @InjectView(R.id.thirdDayHiTemp) TextView mDayThreeHiTemp;
+     @InjectView(R.id.thirdDayLowTemp) TextView mDayThreeLowTemp;
+     @InjectView(R.id.thirdDaySummary) TextView mDayThreeSummary;
+     @InjectView(R.id.thirdDayImageView) ImageView mDayThreeIcon;
+
+     @InjectView(R.id.fourthDayTextView) TextView mFourthDayLabel;
+     @InjectView(R.id.fourthDayHiTemp) TextView mDayFourHiTemp;
+     @InjectView(R.id.fourthDayLowTemp) TextView mDayFourLowTemp;
+     @InjectView(R.id.fourthDaySummary) TextView mDayFourSummary;
+     @InjectView(R.id.fourthDayImageView) ImageView mDayFourIcon;
+
+     @InjectView(R.id.fifthDayTextView) TextView mFifthDayLabel;
+     @InjectView(R.id.fifthDayHiTemp) TextView mDayFiveHiTemp;
+     @InjectView(R.id.fifthDayLowTemp) TextView mDayFiveLowTemp;
+     @InjectView(R.id.fifthDaySummary) TextView mDayFiveSummary;
+     @InjectView(R.id.fifthDayImageView) ImageView mDayFiveIcon;
+
+     @InjectView(R.id.sixthDayTextView) TextView mSixthDayLabel;
+     @InjectView(R.id.sixthDayHiTemp) TextView mDaySixHiTemp;
+     @InjectView(R.id.sixthDayLowTemp) TextView mDaySixLowTemp;
+     @InjectView(R.id.sixthDaySummary) TextView mDaySixSummary;
+     @InjectView(R.id.sixthDayImageView) ImageView mDaySixIcon;
 
 
 
@@ -255,9 +289,42 @@ import butterknife.InjectView;
          mMinTempLabel.setText(mCurrentConditions.getTemperatureMin() + "");
 
          //WeekDay Forecast objects..
+         getDays();
+         Drawable drawable1 = getResources().getDrawable(dayOne.getIconId());
+         mDayOneIcon.setImageDrawable(drawable1);
          mDayOneHiTemp.setText(dayOne.getTemperatureMax() + "");
          mDayOneLowTemp.setText(dayOne.getTemperatureMin()+"");
          mDayOneSummary.setText(dayOne.getSummary());
+
+         Drawable drawable2 = getResources().getDrawable(dayTwo.getIconId());
+         mDayTwoIcon.setImageDrawable(drawable2);
+         mDayTwoHiTemp.setText(dayTwo.getTemperatureMax() + "");
+         mDayTwoLowTemp.setText(dayTwo.getTemperatureMin()+"");
+         mDayTwoSummary.setText(dayTwo.getSummary());
+
+         Drawable drawable3 = getResources().getDrawable(dayThree.getIconId());
+         mDayThreeIcon.setImageDrawable(drawable3);
+         mDayThreeHiTemp.setText(dayThree.getTemperatureMax() + "");
+         mDayThreeLowTemp.setText(dayThree.getTemperatureMin()+"");
+         mDayThreeSummary.setText(dayThree.getSummary());
+
+         Drawable drawable4 = getResources().getDrawable(dayFour.getIconId());
+         mDayFourIcon.setImageDrawable(drawable4);
+         mDayFourHiTemp.setText(dayFour.getTemperatureMax() + "");
+         mDayFourLowTemp.setText(dayFour.getTemperatureMin()+"");
+         mDayFourSummary.setText(dayFour.getSummary());
+
+         Drawable drawable5 = getResources().getDrawable(dayFive.getIconId());
+         mDayFiveIcon.setImageDrawable(drawable5);
+         mDayFiveHiTemp.setText(dayFive.getTemperatureMax() + "");
+         mDayFiveLowTemp.setText(dayFive.getTemperatureMin()+"");
+         mDayFiveSummary.setText(dayFive.getSummary());
+
+         Drawable drawable6 = getResources().getDrawable(daySix.getIconId());
+         mDaySixIcon.setImageDrawable(drawable6);
+         mDaySixHiTemp.setText(daySix.getTemperatureMax() + "");
+         mDaySixLowTemp.setText(daySix.getTemperatureMin()+"");
+         mDaySixSummary.setText(daySix.getSummary());
 
      }
 
@@ -305,6 +372,27 @@ import butterknife.InjectView;
              e1.printStackTrace();
          }
 
+     }
+     private void getDays(){
+         Calendar sCalendar = Calendar.getInstance();
+         String dayLongName = sCalendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
+         String[] weekdays = {"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
+         int currentDayNum = 0;
+
+
+         for (int i = 0; i < weekdays.length; i++){
+             if (dayLongName.equals(weekdays[i])) {
+                 currentDayNum = i;
+                 break;
+             }
+         }
+
+         mFirstDayLabel.setText(weekdays[((currentDayNum +7+1) % 7)]);
+         mSecondDayLabel.setText(weekdays[((currentDayNum +7+2) % 7)]);
+         mThirdDayLabel.setText(weekdays[((currentDayNum +7+3) % 7)]);
+         mFourthDayLabel.setText(weekdays[((currentDayNum +7+4) % 7)]);
+         mFifthDayLabel.setText(weekdays[((currentDayNum +7+5) % 7)]);
+         mSixthDayLabel.setText(weekdays[((currentDayNum +7+6) % 7)]);
      }
 
 
