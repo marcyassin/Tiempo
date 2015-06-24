@@ -11,8 +11,7 @@
     <string name="locationTempLabel">...</string>
 
     <string name="city_prompt">Choose a location</string>
-
-
+    <string name="location_edit_text_hint">Enter new location</string>
 
 
 </resources>

@@ -17,6 +17,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -105,19 +107,21 @@ import butterknife.InjectView;
      @InjectView(R.id.sixthDaySummary) TextView mDaySixSummary;
      @InjectView(R.id.sixthDayImageView) ImageView mDaySixIcon;
 
+     @InjectView(R.id.angry_btn) Button locationButton;
+     @InjectView(R.id.locationEditText) EditText mLocationEditText;
+     @InjectView(R.id.spinner) Spinner mSpinner;
+
      private String[] arraySpinner;
      String locationLabel;
 
 
+     //////////////    OnCreate Method
      @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
          mProgressBar.setVisibility(View.INVISIBLE);
-
-
-
          LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
          Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
          final double longitude = location.getLongitude();
@@ -132,19 +136,38 @@ import butterknife.InjectView;
              }
          });
 
+         locationButton.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 getUserInputAboutLocation();
+             }
+         });
+
          getForecast(latitude, longitude);
          Log.d(TAG, "Main UI code is running!");
 
     }
 
+     private void getUserInputAboutLocation() {
+         if (mSpinner.getVisibility() == View.INVISIBLE){
+             mSpinner.setVisibility(View.VISIBLE);
+             mLocationEditText.setVisibility(View.INVISIBLE);
+         }
+         else {
+             mSpinner.setVisibility(View.INVISIBLE);
+             mLocationEditText.setVisibility(View.VISIBLE);
+         }
+
+
+     }
+
      private void setSpinner() {
          this.arraySpinner = new String[] {
                  locationLabel
          };
-         Spinner s = (Spinner) findViewById(R.id.spinner);
          ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                  android.R.layout.simple_spinner_item, arraySpinner);
-         s.setAdapter(adapter);
+         mSpinner.setAdapter(adapter);
      }
 
 
@@ -187,10 +210,6 @@ import butterknife.InjectView;
          CurrentConditions dayConditions = new CurrentConditions();
 
          JSONObject forecast = new JSONObject(jsonData);
-
-         //String timezone = forecast.getString("timezone");
-         //Log.i(TAG,"From JSON: " + timezone);
-
          JSONObject daily = forecast.getJSONObject("daily");
          JSONArray data = daily.getJSONArray("data");
          JSONObject p = (JSONObject)data.get(day);
@@ -200,25 +219,18 @@ import butterknife.InjectView;
          dayConditions.setIcon(p.getString("icon"));
          dayConditions.setSummary(p.getString("summary"));
 
-         //Log.d(TAG, dayConditions.getFormattedTime());
-
-
          return dayConditions;
 
      }
 
-     private void getForecast(double latitude, double longitude){
-
+     private void getForecast(double latitude, double longitude){ ////// API call
          String apiKey = "b1f515c59b0f17d22079cb5d891725ad";
          String foreCastURL = "https://api.forecast.io/forecast/" + apiKey + "/" + latitude + "," + longitude ;
+
          if (isNetworkAvailable()) {
-
              toggleRefresh();
-
-
              OkHttpClient client = new OkHttpClient();
              Request request = new Request.Builder().url(foreCastURL).build();
-
              Call call = client.newCall(request);
              call.enqueue(new Callback() {
                  @Override
@@ -231,8 +243,6 @@ import butterknife.InjectView;
                          }
                      });
                      alertUserAboutErrror();
-
-
                  }
 
                  @Override
@@ -245,11 +255,8 @@ import butterknife.InjectView;
                          }
                      });
                      try {
-
                          String jsonData = response.body().string();
-
                          Log.v(TAG, jsonData);
-
                          if (response.isSuccessful()) {
                              mCurrentConditions = getCurrentDetails(jsonData);
                              dayOne = getDayDetails(jsonData, 1);
@@ -258,26 +265,21 @@ import butterknife.InjectView;
                              dayFour = getDayDetails(jsonData, 4);
                              dayFive = getDayDetails(jsonData, 5);
                              daySix = getDayDetails(jsonData,6);
-
                              runOnUiThread(new Runnable() {
                                  @Override
                                  public void run() {
                                      updateDisplay();
-
                                  }
                              });
 
                          } else {
                              alertUserAboutErrror();
-
                          }
-
                      } catch (IOException e) {
                          Log.e(TAG, "Exception caught: ", e);
                      } catch (JSONException e) {
                          Log.e(TAG, "Exception caught: ", e);
                      }
-
                  }
              });
          }
@@ -287,14 +289,14 @@ import butterknife.InjectView;
          }
      }
 
-     private void updateDisplay() {
+     private void updateDisplay() { // Complete UI controller
          //Current Day conditions..
          Drawable drawable = getResources().getDrawable(mCurrentConditions.getIconId());
          mTemperatureLabel.setText(mCurrentConditions.getTemperature() + "");
          mTimeLabel.setText("Last updated at " + mCurrentConditions.getFormattedTime() + "");
          mHumidityValue.setText(mCurrentConditions.getHumidity() + "");
          mPrecipChance.setText(mCurrentConditions.getPrecipChance() + "%");
-         mSummaryLabel.setText(mCurrentConditions.getSummary());
+         mSummaryLabel.setText("Right now: " + mCurrentConditions.getSummary());
          mIconImageView.setImageDrawable(drawable);
          mLocationLabel.setText(locationLabel);
          mMaxTempLabel.setText(mCurrentConditions.getTemperatureMax() + "");
@@ -339,18 +341,15 @@ import butterknife.InjectView;
          mDaySixSummary.setText(daySix.getSummary());
 
      }
-
      private void toggleRefresh() {
          if (mProgressBar.getVisibility() == View.INVISIBLE){
              mProgressBar.setVisibility(View.VISIBLE);
              mRefreshButton.setVisibility(View.INVISIBLE);
-
          }
          else {
              mProgressBar.setVisibility(View.INVISIBLE);
              mRefreshButton.setVisibility(View.VISIBLE);
          }
-
      }
 
      private boolean isNetworkAvailable() {
@@ -367,12 +366,10 @@ import butterknife.InjectView;
      private void alertUserAboutErrror() {
          AlertDialogFragment dialog = new AlertDialogFragment();
          dialog.show(getFragmentManager(),"error_dialog");
-
      }
 
      private void getLocationName(double lat, double longit){
          Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
-
          try {
              List<Address> addresses = geoCoder.getFromLocation(lat, longit, 1);
 
@@ -383,14 +380,13 @@ import butterknife.InjectView;
          catch (IOException e1) {
              e1.printStackTrace();
          }
-
      }
+
      private void getDays(){
          Calendar sCalendar = Calendar.getInstance();
          String dayLongName = sCalendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
          String[] weekdays = {"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
          int currentDayNum = 0;
-
 
          for (int i = 0; i < weekdays.length; i++){
              if (dayLongName.equals(weekdays[i])) {

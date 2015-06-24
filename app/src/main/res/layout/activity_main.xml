@@ -36,19 +36,38 @@
         android:prompt="@string/city_prompt"
         android:popupBackground="@android:color/white"
         android:layout_alignParentLeft="true"
-        android:background="@android:color/white"
+        android:layout_marginRight="50dp"
+        android:theme="@style/MooTheme"
+        android:layout_below="@id/refreshButton"
+        android:layout_marginTop="60dp"
+        android:visibility="visible"
+        />
+
+    <EditText
+        android:id="@+id/locationEditText"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
         android:layout_marginRight="50dp"
         android:layout_below="@id/refreshButton"
         android:layout_marginTop="60dp"
+        android:hint="@string/location_edit_text_hint"
+        android:textColorHint="@android:color/white"
+        android:textColor="@android:color/white"
+        android:visibility="invisible"
+        android:theme="@style/MyEditTextTheme"
         />
+
 
     <Button
         android:id="@+id/angry_btn"
-        android:textColor="#C7C7C7"
+        android:textColor="@android:color/white"
         android:layout_width="35dp"
         android:layout_height="30dp"
-        android:background="@drawable/buttonshape"
         android:layout_alignTop="@+id/spinner"
+        android:background="@null"
+        android:text="+"
+        android:textSize="35sp"
         android:layout_marginRight="10dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
