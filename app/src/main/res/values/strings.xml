@@ -12,14 +12,7 @@
 
     <string name="city_prompt">Choose a location</string>
 
-    <string-array name="location_arrays">
-        <item>Los Angeles, CA</item>
-        <item>Chicago, IL</item>
-        <item>Las Vegas, NV</item>
-        <item>Seattle, WA</item>
-        <item>Washington, D.C.</item>
-        <item>Boston, MA</item>
-    </string-array>
+
 
 
 </resources>

@@ -16,8 +16,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.squareup.okhttp.Call;
@@ -103,9 +105,7 @@ import butterknife.InjectView;
      @InjectView(R.id.sixthDaySummary) TextView mDaySixSummary;
      @InjectView(R.id.sixthDayImageView) ImageView mDaySixIcon;
 
-
-
-
+     private String[] arraySpinner;
      String locationLabel;
 
 
@@ -116,11 +116,14 @@ import butterknife.InjectView;
         ButterKnife.inject(this);
          mProgressBar.setVisibility(View.INVISIBLE);
 
+
+
          LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
          Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
          final double longitude = location.getLongitude();
          final double latitude = location.getLatitude();
          getLocationName(latitude,longitude);
+         setSpinner();
 
          mRefreshButton.setOnClickListener(new View.OnClickListener() {
              @Override
@@ -130,10 +133,19 @@ import butterknife.InjectView;
          });
 
          getForecast(latitude, longitude);
-        Log.d(TAG, "Main UI code is running!");
+         Log.d(TAG, "Main UI code is running!");
 
     }
 
+     private void setSpinner() {
+         this.arraySpinner = new String[] {
+                 locationLabel
+         };
+         Spinner s = (Spinner) findViewById(R.id.spinner);
+         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                 android.R.layout.simple_spinner_item, arraySpinner);
+         s.setAdapter(adapter);
+     }
 
 
      private CurrentConditions getCurrentDetails(String jsonData) throws JSONException {
