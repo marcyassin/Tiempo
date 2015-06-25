@@ -29,23 +29,29 @@
         android:src="@drawable/refresh"
         />
 
-    <Spinner
-        android:id="@+id/spinner"
+
+    <TextView
+        style="@android:style/Widget.EditText"
+        android:theme="@style/MyEditTextTheme"
+
+        android:id="@+id/locationTextView"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:prompt="@string/city_prompt"
-        android:popupBackground="@android:color/white"
         android:layout_alignParentLeft="true"
         android:layout_marginRight="50dp"
-        android:theme="@style/MooTheme"
         android:layout_below="@id/refreshButton"
+        android:text="@string/locationTempLabel"
         android:layout_marginTop="60dp"
+        android:textColor="@android:color/white"
         android:visibility="visible"
+        android:textSize="16sp"
+
         />
 
     <EditText
         android:id="@+id/locationEditText"
         android:layout_width="match_parent"
+        android:textSize="16sp"
         android:layout_height="40dp"
         android:layout_alignParentLeft="true"
         android:layout_marginRight="50dp"
@@ -64,7 +70,7 @@
         android:textColor="@android:color/white"
         android:layout_width="35dp"
         android:layout_height="30dp"
-        android:layout_alignTop="@+id/spinner"
+        android:layout_alignTop="@+id/locationTextView"
         android:background="@null"
         android:text="+"
         android:textSize="35sp"
@@ -72,23 +78,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:shadowColor="@android:color/white"
-        android:layout_alignBottom="@+id/spinner"/>
-
-
-
-
-    <TextView
-        android:id="@+id/locationLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/refreshButton"
-        android:layout_marginTop="60dp"
-        android:text="@string/locationTempLabel"
-        android:textColor="@android:color/white"
-        android:typeface="normal"
-        android:visibility="invisible"
-        android:textSize="16sp"/>
+        android:layout_alignBottom="@+id/locationTextView"/>
 
     <TextView
         android:layout_width="wrap_content"

@@ -3,6 +3,7 @@
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -68,7 +69,6 @@ import butterknife.InjectView;
      @InjectView(R.id.iconImageView) ImageView mIconImageView;
      @InjectView(R.id.refreshButton) ImageView mRefreshButton;
      @InjectView(R.id.progressBar) ProgressBar mProgressBar;
-     @InjectView(R.id.locationLabel) TextView mLocationLabel;
      @InjectView(R.id.maxTemp) TextView mMaxTempLabel;
      @InjectView(R.id.minTemp) TextView mMinTempLabel;
 
@@ -110,12 +110,11 @@ import butterknife.InjectView;
 
      @InjectView(R.id.angry_btn) Button locationButton;
      @InjectView(R.id.locationEditText) EditText mLocationEditText;
-     @InjectView(R.id.spinner) Spinner mSpinner;
+     @InjectView(R.id.locationTextView) TextView mLocationTextView;
 
-     private String[] arraySpinner;
      String locationLabel;
 
-     private SharedPreferences savedLocations;
+
 
 
      //////////////    OnCreate Method
@@ -130,8 +129,8 @@ import butterknife.InjectView;
          final double longitude = location.getLongitude();
          final double latitude = location.getLatitude();
          getLocationName(latitude,longitude);
-         setSpinner();
-         savedLocations = getSharedPreferences("locations",MODE_PRIVATE);
+
+
 
          mRefreshButton.setOnClickListener(new View.OnClickListener() {
              @Override
@@ -153,7 +152,7 @@ import butterknife.InjectView;
     }
 
      private void getUserInputAboutLocation() {
-         if (mSpinner.getVisibility() == View.INVISIBLE){
+         if (mLocationTextView.getVisibility() == View.INVISIBLE){
 
              newLocationHandle();
 
@@ -162,7 +161,7 @@ import butterknife.InjectView;
 
          }
          else {
-             mSpinner.setVisibility(View.INVISIBLE);
+             mLocationTextView.setVisibility(View.INVISIBLE);
              mLocationEditText.setVisibility(View.VISIBLE);
          }
 
@@ -174,9 +173,12 @@ import butterknife.InjectView;
          String newLocation = mLocationEditText.getText().toString();
          double newLatitude, newLongitude;
 
-         if (newLocation.length() == 0){}
+         if (newLocation.length() == 0){
+             mLocationTextView.setVisibility(View.VISIBLE);
+             mLocationEditText.setVisibility(View.INVISIBLE);
+         }
 
-         if (newLocation.length() < 2){
+         else if (newLocation.length() == 1){
              Toast.makeText(getApplicationContext(),getString(R.string.invalid_location_message), Toast.LENGTH_LONG).show();
          }
 
@@ -197,8 +199,7 @@ import butterknife.InjectView;
 
                      getForecast(newLatitude, newLongitude);
                      getLocationName(newLatitude, newLongitude);
-                     setSpinner();
-                     mSpinner.setVisibility(View.VISIBLE);
+                     mLocationTextView.setVisibility(View.VISIBLE);
                      mLocationEditText.setVisibility(View.INVISIBLE);
 
                  }
@@ -223,21 +224,9 @@ import butterknife.InjectView;
 
      }
 
-     private void saveTag(String tag){
-         String or = savedLocations.getString(tag, null);
-         SharedPreferences.Editor preferencesEditor = savedLocations.edit();
-         preferencesEditor.putString("tag",tag); //change this line to this
-         preferencesEditor.commit();
-     }
 
-     private void setSpinner() {
-         this.arraySpinner = new String[] {
-                 locationLabel
-         };
-         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                 android.R.layout.simple_spinner_item, arraySpinner);
-         mSpinner.setAdapter(adapter);
-     }
+
+
 
 
      private CurrentConditions getCurrentDetails(String jsonData) throws JSONException {
@@ -360,6 +349,8 @@ import butterknife.InjectView;
 
      private void updateDisplay() { // Complete UI controller
          //Current Day conditions..
+
+         mLocationTextView.setText(locationLabel);
          Drawable drawable = getResources().getDrawable(mCurrentConditions.getIconId());
          mTemperatureLabel.setText(mCurrentConditions.getTemperature() + "");
          mTimeLabel.setText("Time at location last updated at " + mCurrentConditions.getFormattedTime() + "");
@@ -367,7 +358,6 @@ import butterknife.InjectView;
          mPrecipChance.setText(mCurrentConditions.getPrecipChance() + "%");
          mSummaryLabel.setText("Right now: " + mCurrentConditions.getSummary());
          mIconImageView.setImageDrawable(drawable);
-         mLocationLabel.setText(locationLabel);
          mMaxTempLabel.setText(mCurrentConditions.getTemperatureMax() + "");
          mMinTempLabel.setText(mCurrentConditions.getTemperatureMin() + "");
 
