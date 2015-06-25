@@ -13,6 +13,7 @@
     <string name="city_prompt">Choose a location</string>
     <string name="location_edit_text_hint">Enter new location</string>
     <string name="invalid_location_message">No matches were found for that location</string>
+    <string name="farenheit_celsius_button">F° | C°</string>
 
 
 </resources>

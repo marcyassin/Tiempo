@@ -29,6 +29,21 @@
         android:src="@drawable/refresh"
         />
 
+    <Button
+        android:id="@+id/cfToggle"
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/farenheit_celsius_button"
+        android:background="@android:color/white"
+        android:textColor="#ff00c4ff"
+        android:textSize="13sp"
+        />
+
+
+
+
 
     <TextView
         style="@android:style/Widget.EditText"
@@ -210,7 +225,8 @@
         android:layout_alignTop="@id/degreeImageView"
         android:textColor="@android:color/white"
         android:textSize="25dp"
-        android:layout_marginLeft="5dp"/>
+        android:layout_marginLeft="5dp"
+        />
 
     <ImageView
         android:id="@+id/maxDegreeImageView"

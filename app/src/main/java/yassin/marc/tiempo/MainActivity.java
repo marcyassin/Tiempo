@@ -31,7 +31,6 @@ import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,13 +40,6 @@ import java.util.List;
 import java.util.Locale;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-
-
- // Add option to view in celsius
- // Add searchbar for picking to see other cities' weather
- // add 5 day forecast to bottom of the screen
- // make UI more original
-
 
  public class MainActivity extends Activity {
 
@@ -59,6 +51,8 @@ import butterknife.InjectView;
      private CurrentConditions dayFour;
      private CurrentConditions dayFive;
      private CurrentConditions daySix;
+
+     private double refreshLat, refreshLong; // longitude and latitude latched to refresh button
 
 
      @InjectView(R.id.timeLabel) TextView mTimeLabel;
@@ -112,7 +106,10 @@ import butterknife.InjectView;
      @InjectView(R.id.locationEditText) EditText mLocationEditText;
      @InjectView(R.id.locationTextView) TextView mLocationTextView;
 
+     @InjectView(R.id.cfToggle) Button cfToggleButton;
+
      String locationLabel;
+     String responseSetting = "?units=us";
 
 
 
@@ -128,6 +125,10 @@ import butterknife.InjectView;
          Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
          final double longitude = location.getLongitude();
          final double latitude = location.getLatitude();
+
+         refreshLat = latitude;
+         refreshLong = longitude;
+
          getLocationName(latitude,longitude);
 
 
@@ -135,7 +136,7 @@ import butterknife.InjectView;
          mRefreshButton.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
-                 getForecast(latitude, longitude);
+                 getForecast(refreshLat, refreshLong);
              }
          });
 
@@ -146,19 +147,62 @@ import butterknife.InjectView;
              }
          });
 
+         cfToggleButton.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 toggleAllTemps();
+                 getForecast(refreshLat, refreshLong);
+             }
+         });
+
          getForecast(latitude, longitude);
          Log.d(TAG, "Main UI code is running!");
-
     }
+
+     private void toggleAllTemps() {
+
+         if (responseSetting.equals("?units=us")) {
+             responseSetting = "?units=si";
+         } else {
+             responseSetting = "?units=us";
+         }
+     }
+
+
+
+//         mTemperatureLabel = ((mTemperatureLabel - 32)*5)/9;
+//         mMaxTempLabel = ((mMaxTempLabel - 32)*5)/9;
+//         mMinTempLabel = ((mTemperatureMin - 32)*5)/9;
+//
+//         mTemperature = ((mTemperature - 32)*5)/9;
+//         mTemperatureMax = ((mTemperatureMax - 32)*5)/9;
+//         mTemperatureMin = ((mTemperatureMin - 32)*5)/9;
+//
+//         mTemperature = ((mTemperature - 32)*5)/9;
+//         mTemperatureMax = ((mTemperatureMax - 32)*5)/9;
+//         mTemperatureMin = ((mTemperatureMin - 32)*5)/9;
+//
+//         mTemperature = ((mTemperature - 32)*5)/9;
+//         mTemperatureMax = ((mTemperatureMax - 32)*5)/9;
+//         mTemperatureMin = ((mTemperatureMin - 32)*5)/9;
+//
+//         mTemperature = ((mTemperature - 32)*5)/9;
+//         mTemperatureMax = ((mTemperatureMax - 32)*5)/9;
+//         mTemperatureMin = ((mTemperatureMin - 32)*5)/9;
+//
+//         mTemperature = ((mTemperature - 32)*5)/9;
+//         mTemperatureMax = ((mTemperatureMax - 32)*5)/9;
+//         mTemperatureMin = ((mTemperatureMin - 32)*5)/9;
+//
+//         mTemperature = ((mTemperature - 32)*5)/9;
+//         mTemperatureMax = ((mTemperatureMax - 32)*5)/9;
+//         mTemperatureMin = ((mTemperatureMin - 32)*5)/9;
+
+
 
      private void getUserInputAboutLocation() {
          if (mLocationTextView.getVisibility() == View.INVISIBLE){
-
              newLocationHandle();
-
-             // if it is, commit to shared preferences, spinner list
-
-
          }
          else {
              mLocationTextView.setVisibility(View.INVISIBLE);
@@ -201,6 +245,9 @@ import butterknife.InjectView;
                      getLocationName(newLatitude, newLongitude);
                      mLocationTextView.setVisibility(View.VISIBLE);
                      mLocationEditText.setVisibility(View.INVISIBLE);
+
+                     refreshLat = newLatitude;
+                     refreshLong = newLongitude;
 
                  }
 
@@ -283,7 +330,7 @@ import butterknife.InjectView;
 
      private void getForecast(double latitude, double longitude){ ////// API call
          String apiKey = "b1f515c59b0f17d22079cb5d891725ad";
-         String foreCastURL = "https://api.forecast.io/forecast/" + apiKey + "/" + latitude + "," + longitude ;
+         String foreCastURL = "https://api.forecast.io/forecast/" + apiKey + "/" + latitude + "," + longitude + responseSetting ;
 
          if (isNetworkAvailable()) {
              toggleRefresh();
