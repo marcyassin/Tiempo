@@ -168,38 +168,6 @@ import butterknife.InjectView;
          }
      }
 
-
-
-//         mTemperatureLabel = ((mTemperatureLabel - 32)*5)/9;
-//         mMaxTempLabel = ((mMaxTempLabel - 32)*5)/9;
-//         mMinTempLabel = ((mTemperatureMin - 32)*5)/9;
-//
-//         mTemperature = ((mTemperature - 32)*5)/9;
-//         mTemperatureMax = ((mTemperatureMax - 32)*5)/9;
-//         mTemperatureMin = ((mTemperatureMin - 32)*5)/9;
-//
-//         mTemperature = ((mTemperature - 32)*5)/9;
-//         mTemperatureMax = ((mTemperatureMax - 32)*5)/9;
-//         mTemperatureMin = ((mTemperatureMin - 32)*5)/9;
-//
-//         mTemperature = ((mTemperature - 32)*5)/9;
-//         mTemperatureMax = ((mTemperatureMax - 32)*5)/9;
-//         mTemperatureMin = ((mTemperatureMin - 32)*5)/9;
-//
-//         mTemperature = ((mTemperature - 32)*5)/9;
-//         mTemperatureMax = ((mTemperatureMax - 32)*5)/9;
-//         mTemperatureMin = ((mTemperatureMin - 32)*5)/9;
-//
-//         mTemperature = ((mTemperature - 32)*5)/9;
-//         mTemperatureMax = ((mTemperatureMax - 32)*5)/9;
-//         mTemperatureMin = ((mTemperatureMin - 32)*5)/9;
-//
-//         mTemperature = ((mTemperature - 32)*5)/9;
-//         mTemperatureMax = ((mTemperatureMax - 32)*5)/9;
-//         mTemperatureMin = ((mTemperatureMin - 32)*5)/9;
-
-
-
      private void getUserInputAboutLocation() {
          if (mLocationTextView.getVisibility() == View.INVISIBLE){
              newLocationHandle();
