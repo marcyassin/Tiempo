@@ -2,6 +2,7 @@
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -114,6 +115,8 @@ import butterknife.InjectView;
      private String[] arraySpinner;
      String locationLabel;
 
+     private SharedPreferences savedLocations;
+
 
      //////////////    OnCreate Method
      @Override
@@ -128,6 +131,7 @@ import butterknife.InjectView;
          final double latitude = location.getLatitude();
          getLocationName(latitude,longitude);
          setSpinner();
+         savedLocations = getSharedPreferences("locations",MODE_PRIVATE);
 
          mRefreshButton.setOnClickListener(new View.OnClickListener() {
              @Override
@@ -150,8 +154,12 @@ import butterknife.InjectView;
 
      private void getUserInputAboutLocation() {
          if (mSpinner.getVisibility() == View.INVISIBLE){
-             mSpinner.setVisibility(View.VISIBLE);
-             mLocationEditText.setVisibility(View.INVISIBLE);
+
+             newLocationHandle();
+
+             // if it is, commit to shared preferences, spinner list
+
+
          }
          else {
              mSpinner.setVisibility(View.INVISIBLE);
@@ -159,6 +167,67 @@ import butterknife.InjectView;
          }
 
 
+     }
+
+     private void newLocationHandle(){
+
+         String newLocation = mLocationEditText.getText().toString();
+         double newLatitude, newLongitude;
+
+         if (newLocation.length() == 0){}
+
+         if (newLocation.length() < 2){
+             Toast.makeText(getApplicationContext(),getString(R.string.invalid_location_message), Toast.LENGTH_LONG).show();
+         }
+
+         else {
+             Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
+             try {
+                 List<Address> geoResults = geoCoder.getFromLocationName(newLocation, 1);
+                 int i = 0;
+                 while ((geoResults.size()==0) && (i < 5)) {
+                     geoResults = geoCoder.getFromLocationName(newLocation, 1);
+                     i++;
+
+                 }
+                 if (geoResults.size()>0) {
+                     Address addr = geoResults.get(0);
+                     newLatitude = addr.getLatitude();
+                     newLongitude = addr.getLongitude();
+
+                     getForecast(newLatitude, newLongitude);
+                     getLocationName(newLatitude, newLongitude);
+                     setSpinner();
+                     mSpinner.setVisibility(View.VISIBLE);
+                     mLocationEditText.setVisibility(View.INVISIBLE);
+
+                 }
+
+                 else{
+                     Toast.makeText(getApplicationContext(), getString(R.string.invalid_location_message), Toast.LENGTH_LONG).show();
+
+
+                 }
+
+
+
+
+             } catch (Exception e) {
+                 System.out.print(e.getMessage());
+                 Toast.makeText(getApplicationContext(), getString(R.string.network_unavailable_message), Toast.LENGTH_LONG).show();
+
+             }
+
+         }
+
+
+     }
+
+     private void saveTag(String tag){
+         String or = savedLocations.getString(tag, null);
+         SharedPreferences.Editor preferencesEditor = savedLocations.edit();
+         preferencesEditor.putString("tag",tag); //change this line to this
+         preferencesEditor.commit();
      }
 
      private void setSpinner() {
@@ -293,7 +362,7 @@ import butterknife.InjectView;
          //Current Day conditions..
          Drawable drawable = getResources().getDrawable(mCurrentConditions.getIconId());
          mTemperatureLabel.setText(mCurrentConditions.getTemperature() + "");
-         mTimeLabel.setText("Last updated at " + mCurrentConditions.getFormattedTime() + "");
+         mTimeLabel.setText("Time at location last updated at " + mCurrentConditions.getFormattedTime() + "");
          mHumidityValue.setText(mCurrentConditions.getHumidity() + "");
          mPrecipChance.setText(mCurrentConditions.getPrecipChance() + "%");
          mSummaryLabel.setText("Right now: " + mCurrentConditions.getSummary());

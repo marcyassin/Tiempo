@@ -220,7 +220,7 @@
         android:layout_alignTop="@id/degreeImageView"
         android:textColor="@android:color/white"
         android:textSize="25dp"
-        android:layout_marginLeft="15dp"/>
+        android:layout_marginLeft="5dp"/>
 
     <ImageView
         android:id="@+id/maxDegreeImageView"
