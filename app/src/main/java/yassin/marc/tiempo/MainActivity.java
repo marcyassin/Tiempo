@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -123,13 +124,20 @@ import butterknife.InjectView;
          mProgressBar.setVisibility(View.INVISIBLE);
          LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
          Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-         final double longitude = location.getLongitude();
-         final double latitude = location.getLatitude();
+         if (location == null){
+             lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
+         }
+         else {
+             final double longitude = location.getLongitude();
+             final double latitude = location.getLatitude();
 
-         refreshLat = latitude;
-         refreshLong = longitude;
 
-         getLocationName(latitude,longitude);
+             refreshLat = latitude;
+             refreshLong = longitude;
+         }
+
+         getLocationName(refreshLat,refreshLong);
+
 
 
 
@@ -155,9 +163,31 @@ import butterknife.InjectView;
              }
          });
 
-         getForecast(latitude, longitude);
+         getForecast(refreshLat, refreshLong);
          Log.d(TAG, "Main UI code is running!");
     }
+
+     private final LocationListener locationListener = new LocationListener() {
+         public void onLocationChanged(Location location) {
+             refreshLong = location.getLongitude();
+             refreshLat = location.getLatitude();
+         }
+
+         @Override
+         public void onStatusChanged(String provider, int status, Bundle extras) {
+
+         }
+
+         @Override
+         public void onProviderEnabled(String provider) {
+
+         }
+
+         @Override
+         public void onProviderDisabled(String provider) {
+
+         }
+     };
 
      private void toggleAllTemps() {
 
